@@ -13,10 +13,11 @@ import { AuthModule } from './auth/auth.module';
       database: 'mks_movies_db',
       username: 'mksUser',
       password: 'MksPass123',
-      synchronize: true
+      synchronize: true,
     }),
-    AuthModule],
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
