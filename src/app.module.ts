@@ -15,7 +15,7 @@ import { Movie } from './movies/entities/movie.entity';
       database: 'mks_movies_db',
       username: 'mksUser',
       password: 'MksPass123',
-      entities: [Movie],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     AuthModule,
