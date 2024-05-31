@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateMovieDto {
   @IsString()
@@ -10,6 +10,6 @@ export class CreateMovieDto {
   @IsString()
   director: string;
 
-  @IsString()
+  @IsNumber()
   year: number;
 }
