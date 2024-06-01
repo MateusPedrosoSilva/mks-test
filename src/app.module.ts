@@ -5,17 +5,21 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { MoviesModule } from './movies/movies.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ConfigModule } from '@nestjs/config';
+
+console.log(process.env.PG_HOST);
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     CacheModule.register({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'pg_db',
-      port: 5432,
-      database: 'mks_movies_db',
-      username: 'mksUser',
-      password: 'MksPass123',
+      host: process.env.PG_HOST,
+      port: parseInt(process.env.PG_PORT),
+      database: process.env.PG_DATABASE,
+      username: process.env.PG_USER,
+      password: process.env.PG_PASSWORD,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
