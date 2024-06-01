@@ -7,8 +7,6 @@ import { MoviesModule } from './movies/movies.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule } from '@nestjs/config';
 
-console.log(process.env.PG_HOST);
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
