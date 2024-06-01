@@ -8,10 +8,12 @@ import {
   Delete,
   HttpCode,
   NotFoundException,
+  UseInterceptors,
 } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('movies')
 export class MoviesController {
@@ -22,11 +24,15 @@ export class MoviesController {
     return this.moviesService.create(createMovieDto);
   }
 
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(30)
   @Get()
   async findAll() {
     return this.moviesService.findAll();
   }
 
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(30)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const movie = await this.moviesService.findOne(id);

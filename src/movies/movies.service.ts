@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Repository } from 'typeorm';
 import { Movie } from './entities/movie.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class MoviesService {
   constructor(
     @InjectRepository(Movie)
     private readonly repository: Repository<Movie>,
+    @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) {}
 
   create(createMovieDto: CreateMovieDto) {
@@ -17,12 +20,28 @@ export class MoviesService {
     return this.repository.save(movie);
   }
 
-  findAll() {
-    return this.repository.find();
+  async findAll() {
+    const cachedData = await this.cacheService.get<Movie[]>('findAll');
+    if (cachedData) {
+      console.log('Data from cache');
+      return cachedData;
+    }
+    const movies = await this.repository.find();
+    await this.cacheService.set('findAll', movies);
+    console.log('Data from DB');
+    return movies;
   }
 
-  findOne(id: string) {
-    return this.repository.findOneBy({ id });
+  async findOne(id: string) {
+    const cachedData = await this.cacheService.get<Movie>(`find-${id}`);
+    if (cachedData) {
+      console.log('Data from cache');
+      return cachedData;
+    }
+    const movie = await this.repository.findOneBy({ id });
+    await this.cacheService.set(`find-${id}`, movie);
+    console.log('Data from DB');
+    return movie;
   }
 
   async update(id: string, updateMovieDto: UpdateMovieDto) {
