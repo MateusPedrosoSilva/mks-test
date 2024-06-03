@@ -16,6 +16,8 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@UseInterceptors(CacheInterceptor)
+@CacheTTL(30)
 @ApiTags('movies')
 @Controller('movies')
 export class MoviesController {
@@ -27,16 +29,12 @@ export class MoviesController {
     return this.moviesService.create(createMovieDto);
   }
 
-  @UseInterceptors(CacheInterceptor)
-  @CacheTTL(30)
   @Get()
   @ApiOperation({ summary: 'Return all the movies' })
   async findAll() {
     return this.moviesService.findAll();
   }
 
-  @UseInterceptors(CacheInterceptor)
-  @CacheTTL(30)
   @Get(':id')
   @ApiOperation({ summary: 'Return one movie' })
   async findOne(@Param('id') id: string) {
