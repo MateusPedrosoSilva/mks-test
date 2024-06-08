@@ -23,7 +23,7 @@ export class MoviesService {
   async findAll() {
     const cachedData = await this.cacheService.get<Movie[]>('findAll');
     if (cachedData) {
-      console.log('Data from cache');
+      // console.log('Data from cache');
       return cachedData;
     }
     const movies = await this.repository.find();
@@ -35,7 +35,7 @@ export class MoviesService {
   async findOne(id: string) {
     const cachedData = await this.cacheService.get<Movie>(`find-${id}`);
     if (cachedData) {
-      console.log('Data from cache');
+      // console.log('Data from cache');
       return cachedData;
     }
     const movie = await this.repository.findOneBy({ id });
